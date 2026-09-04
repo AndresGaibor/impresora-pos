@@ -1,0 +1,15 @@
+{
+  "name": "windows-spooler",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@lastapp/node-printer": "0.8.0"
+  },
+  "devDependencies": {
+    "bun-types": "^1.0.0"
+  }
+}

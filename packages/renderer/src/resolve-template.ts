@@ -1,0 +1,1 @@
+export { resolveLayout } from './layout';

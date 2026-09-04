@@ -1,0 +1,11 @@
+{
+  "name": "@impresora-pos/agent",
+  "private": true,
+  "version": "0.0.0",
+  "dependencies": {
+    "@impresora-pos/contracts": "workspace:*",
+    "@impresora-pos/printer-core": "workspace:*",
+    "@impresora-pos/renderer": "workspace:*",
+    "@impresora-pos/templates": "workspace:*"
+  }
+}

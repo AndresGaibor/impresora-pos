@@ -1,0 +1,5 @@
+export interface UpdateViewState { currentVersion: string; availableVersion?: string; verified: boolean; busy: boolean; }
+export function AboutPage({ state, onCheck, onApply }: { state: UpdateViewState; onCheck: () => void; onApply: () => void }) {
+  const canApply = Boolean(state.availableVersion && state.verified && !state.busy);
+  return <section className="page-stack"><p className="eyebrow">Producto</p><h1>Acerca de Impresora POS</h1><article className="panel"><p>Versión instalada: <strong>{state.currentVersion}</strong></p>{state.availableVersion ? <p>Versión disponible: <strong>{state.availableVersion}</strong></p> : <p className="muted">No hay actualizaciones disponibles.</p>}<button className="button button-quiet" type="button" onClick={onCheck}>Buscar actualización</button>{state.availableVersion && <button className="button button-primary" type="button" disabled={!canApply} onClick={onApply}>{state.busy ? 'Esperando trabajos...' : 'Aplicar actualización verificada'}</button>}</article></section>;
+}

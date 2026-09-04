@@ -1,0 +1,26 @@
+{
+  "name": "@impresora-pos/gui",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "main": "dist-electron/main.js",
+  "scripts": {
+    "dev": "bun run build && electron dist-electron/main.js",
+    "build": "bun run build:renderer && bun run build:electron",
+    "build:renderer": "vite build",
+    "build:electron": "bun build electron/main.ts electron/preload.ts --outdir dist-electron --target=node",
+    "test": "bun test electron/agent-client.test.ts electron/agent-launcher.test.ts e2e/lifecycle.spec.ts e2e/security.spec.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "19.1.1",
+    "react-dom": "19.1.1"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.10",
+    "@types/react-dom": "19.1.7",
+    "electron": "44.1.1",
+    "typescript": "5.9.2",
+    "vite": "7.1.5"
+  }
+}

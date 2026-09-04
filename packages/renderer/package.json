@@ -1,0 +1,10 @@
+{
+  "name": "@impresora-pos/renderer",
+  "private": true,
+  "version": "0.0.0",
+  "dependencies": {
+    "@impresora-pos/printer-core": "workspace:*",
+    "@impresora-pos/templates": "workspace:*",
+    "@point-of-sale/receipt-printer-encoder": "3.0.3"
+  }
+}

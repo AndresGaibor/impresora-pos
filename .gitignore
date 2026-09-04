@@ -1,0 +1,4 @@
+node_modules
+dist
+apps/gui/dist-electron
+.DS_Store

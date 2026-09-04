@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "exactOptionalPropertyTypes": false,
+    "noEmit": true
+  },
+  "include": [
+    "apps/agent/src/http/**/*.ts",
+    "apps/agent/test/http-api.test.ts",
+    "packages/contracts/src/**/*.ts"
+  ]
+}

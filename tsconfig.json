@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "verbatimModuleSyntax": true,
+    "moduleResolution": "Bundler",
+    "module": "ESNext",
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "types": ["bun-types"],
+      "paths": {
+      "@impresora-pos/contracts": ["./packages/contracts/src/index.ts"],
+      "@impresora-pos/printer-core/*": ["./packages/printer-core/*"],
+      "@impresora-pos/templates": ["./packages/templates/src/index.ts"],
+      "@impresora-pos/renderer": ["./packages/renderer/src/index.ts"]
+     }
+  },
+  "include": ["apps/agent/**/*.ts", "packages/**/*.ts", "tests/**/*.ts"],
+  "exclude": ["apps/gui"]
+}

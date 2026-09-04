@@ -1,0 +1,16 @@
+name: Windows CI
+on:
+  pull_request:
+    paths: ['apps/agent/**', 'apps/gui/**', 'native/**', 'scripts/windows/**', 'electron-builder.yml']
+  push:
+    branches: [main]
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with: { bun-version: '1.4.0' }
+      - run: bun install --frozen-lockfile
+      - run: bun run check
+      - run: bun run build:agent

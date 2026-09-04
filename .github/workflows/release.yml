@@ -1,0 +1,19 @@
+name: Windows Release
+on:
+  workflow_dispatch:
+jobs:
+  release:
+    runs-on: windows-latest
+    permissions: { contents: write }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with: { bun-version: '1.4.0' }
+      - run: bun install --frozen-lockfile
+      - run: bun run check:release
+      - run: bun run build:agent
+      - name: Require production signing key
+        shell: pwsh
+        run: if (-not $env:UPDATE_SIGNING_KEY) { throw 'UPDATE_SIGNING_KEY is required for release' }
+        env:
+          UPDATE_SIGNING_KEY: ${{ secrets.UPDATE_SIGNING_KEY }}

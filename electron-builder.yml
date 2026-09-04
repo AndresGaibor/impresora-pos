@@ -1,0 +1,13 @@
+appId: com.impresora.pos
+productName: Impresora POS
+directories:
+  output: dist/release
+nsis:
+  perMachine: false
+  oneClick: false
+  artifactName: impresora-pos-${version}-win-${arch}.${ext}
+extraResources:
+  - from: dist/windows/impresora-pos-agent.exe
+    to: agent/impresora-pos-agent.exe
+  - from: packages/templates
+    to: templates
