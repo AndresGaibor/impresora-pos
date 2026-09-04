@@ -1,7 +1,7 @@
 # Impresora POS — Diseño arquitectónico
 
 Fecha: 2026-09-03
-Estado: aprobado en conversación, pendiente de revisión del documento
+Estado: aprobado
 
 ## 1. Objetivo
 
