@@ -12,8 +12,45 @@ jobs:
       - run: bun install --frozen-lockfile
       - run: bun run check:release
       - run: bun run build:agent
-      - name: Require production signing key
+      - run: bun run build:gui
+      - run: bun run package:windows:dev
+      - name: Sign Windows installer when configured
         shell: pwsh
-        run: if (-not $env:UPDATE_SIGNING_KEY) { throw 'UPDATE_SIGNING_KEY is required for release' }
+        run: |
+          $installer = Get-ChildItem dist/release/*.exe | Select-Object -First 1
+          if (-not $installer) { throw 'Windows installer was not produced' }
+          $version = (Get-Content package.json | ConvertFrom-Json).version
+          if (-not $version) { throw 'Root product version is missing' }
+          if ($env:WINDOWS_SIGNING_REQUIRED -eq 'true' -and -not $env:WINDOWS_CERTIFICATE_BASE64) { throw 'WINDOWS_CERTIFICATE_BASE64 is required' }
+          if ($env:WINDOWS_CERTIFICATE_BASE64) {
+            [IO.File]::WriteAllBytes('windows-cert.pfx', [Convert]::FromBase64String($env:WINDOWS_CERTIFICATE_BASE64))
+            signtool sign /f windows-cert.pfx /p $env:WINDOWS_CERTIFICATE_PASSWORD /fd SHA256 /tr http://timestamp.digicert.com $installer.FullName
+          }
+          "INSTALLER=$($installer.FullName)" >> $env:GITHUB_ENV
+        env:
+          WINDOWS_SIGNING_REQUIRED: ${{ vars.WINDOWS_SIGNING_REQUIRED || 'true' }}
+          WINDOWS_CERTIFICATE_BASE64: ${{ secrets.WINDOWS_CERTIFICATE_BASE64 }}
+          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
+      - name: Create and sign update manifest
+        shell: pwsh
+        run: |
+          $key = Join-Path $pwd 'update-signing-key.pem'
+          $public = Join-Path $pwd 'update-signing-public.pem'
+          [IO.File]::WriteAllText($key, $env:UPDATE_SIGNING_KEY)
+          [IO.File]::WriteAllText($public, $env:UPDATE_SIGNING_PUBLIC_KEY)
+          New-Item -ItemType Directory -Force dist/release/manifest | Out-Null
+          $version = (Get-Content package.json | ConvertFrom-Json).version
+          bun scripts/release/create-update-manifest.ts $env:INSTALLER $version $env:UPDATE_URL (Get-Date).ToUniversalTime().ToString('o') dist/release/manifest/unsigned.json
+          bun scripts/release/sign-update-manifest.ts dist/release/manifest/unsigned.json $key dist/release/manifest/update.json
+          bun scripts/release/verify-update-manifest.ts dist/release/manifest/update.json $public
         env:
           UPDATE_SIGNING_KEY: ${{ secrets.UPDATE_SIGNING_KEY }}
+          UPDATE_SIGNING_PUBLIC_KEY: ${{ vars.UPDATE_SIGNING_PUBLIC_KEY }}
+          UPDATE_URL: ${{ vars.UPDATE_URL }}
+      - name: Publish Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: impresora-pos-windows-${{ github.sha }}
+          path: |
+            dist/release/*.exe
+            dist/release/manifest/update.json

@@ -72,7 +72,8 @@ export async function startServer(opts: ServerDeps): Promise<{ server: ReturnTyp
     system: systemTransport,
     network: transport,
   }, pairingService, jobService);
-  const adminUpdateRouter = createAdminUpdateRouter(opts.db, opts.approvedOrigins, initialUpdateState());
+  let server: ReturnType<typeof Bun.serve>;
+  const adminUpdateRouter = createAdminUpdateRouter(opts.db, opts.approvedOrigins, initialUpdateState(), () => server.stop());
 
   const mainRouter = new Router();
 
@@ -80,7 +81,6 @@ export async function startServer(opts: ServerDeps): Promise<{ server: ReturnTyp
     mainRouter.add(route);
   }
 
-  let server: ReturnType<typeof Bun.serve>;
   try {
     server = Bun.serve({
       hostname: opts.hostname,

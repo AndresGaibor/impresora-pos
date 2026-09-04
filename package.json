@@ -1,5 +1,6 @@
 {
   "name": "impresora-pos",
+  "version": "1.0.0",
   "private": true,
   "packageManager": "bun@1",
   "workspaces": ["apps/*", "packages/*"],
@@ -10,6 +11,7 @@
     "check:release": "bun install --frozen-lockfile && bun run check && bun run build:gui && bun test packages/web-client examples/erp-web/test",
     "check:agent-native": "bun apps/agent/scripts/check-native-helper.ts",
     "build:agent": "bun run check:agent-native && bun build apps/agent/src/index.ts --compile --target=bun-windows-x64 --windows-hide-console --outfile dist/windows/impresora-pos-agent.exe && bun apps/agent/scripts/package-native-helper.ts",
+    "package:windows:dev": "bunx electron-builder@26.15.3 --win nsis --config electron-builder.yml",
     "dev:gui": "bun run build:gui && electron apps/gui/dist-electron/main.js",
     "build:gui": "bunx vite build --config apps/gui/vite.config.ts && bun build apps/gui/electron/main.ts apps/gui/electron/preload.ts --outdir apps/gui/dist-electron --target=node",
     "test:gui": "bun test apps/gui/electron/agent-client.test.ts apps/gui/electron/agent-launcher.test.ts apps/gui/e2e/lifecycle.spec.ts apps/gui/e2e/security.spec.ts apps/gui/src/features/dashboard/DashboardPage.test.tsx apps/gui/e2e/first-run.spec.ts apps/gui/e2e/first-run.render.spec.ts",
